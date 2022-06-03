@@ -62,8 +62,9 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
         }
         continue
       }
-      await tttsign()
-      await jdMs()
+      // await tttsign()
+      // await jdMs()
+      await readpacksign()
     }
   }
 })()
@@ -76,18 +77,18 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
 
 async function jdMs() {
   $.score = 0
-  await getActInfo()
-  await getUserInfo()
-  await getActInfo()
+  // await getActInfo()
+  // await getUserInfo()
+  // await getActInfo()
   $.cur = $.score
   if ($.encryptProjectId) {
       console.log(`领红包签到`)
       await readpacksign()
-    await getTaskList()
+    //await getTaskList()
   }
-  await getUserInfo(false)
+  // await getUserInfo(false)
   
-  await showMsg()
+  // await showMsg()
 }
 
 function getActInfo() {
@@ -377,20 +378,29 @@ function tttsign() {
 }
 function readpacksign() {
   return new Promise(resolve => {
-      body = 'uuid=88888&clientVersion=10.3.4&client=wh5&osVersion=&area=4_48201_54794_0&networkType=unknown&functionId=signRedPackage&body={"random":"23715587","log":"~1oji7rf","sceneid":"MShPageh5","ext":{"platform":"1","eid":"","referUrl":-1,"userAgent":-1}}&appid=SecKill2020'
+      // body = 'uuid=88888&clientVersion=10.3.4&client=wh5&osVersion=&area=4_48201_54794_0&networkType=unknown&functionId=signRedPackage&body={"random":"23715587","log":"~1oji7rf","sceneid":"MShPageh5","ext":{"platform":"1","eid":"","referUrl":-1,"userAgent":-1}}&appid=SecKill2020'
+
+      body = 'uuid=88888&clientVersion=10.3.4&client=wh5&osVersion=&area=19_1607_4773_62121&networkType=wifi&functionId=signRedPackage&body={"random":"72170257","log":"","sceneid":"MShPageh5","ext":{"platform":"1","eid":"eidIc5068121b6s7hztQ2CIFR9yNOrPzCdKeCYc7UlQr8LgJv89GcORnC3L3v/gg41KUeWo199omCF/tz TlKapFVjRcn8RrhymGv8BE3UBpNO7HcLtq","referUrl":-1,"userAgent":-1}}&appid=SecKill2020'
+
+
+
     $.post(readpack(body), (err, resp, data) => {
     
       try {
         if (err) {
           console.log(`${err},${jsonParse(resp.body)['message']}`)
           console.log(`${$.name} API请求失败，请检查网路重试`)
+          console.log(`readpacksign error`)
         } else {
           if (safeGet(data)) {
             data = JSON.parse(data)
             if (data.code === 200) {
               rewardsInfo = data.result.assignmentResult.msg
               console.log(`${rewardsInfo}`)
-            }else console.log("今日签到红包已领")
+            }else console.log(`${rewardsInfo}`)
+            // }else console.log("今日签到红包已领")
+            
+            
           }
         }
       } catch (e) {
@@ -401,6 +411,9 @@ function readpacksign() {
     })
   })
 }
+
+
+
 function showMsg() {
   return new Promise(resolve => {
     message += `本次运行获得秒秒币${$.score-$.cur}枚，共${$.score}枚`;
@@ -408,6 +421,8 @@ function showMsg() {
     resolve()
   })
 }
+
+
 function ttt(body) {
   let url = `${JD_API_HOST}client.action?functionId=doInteractiveAssignment`;
 
